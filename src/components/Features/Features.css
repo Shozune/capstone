@@ -1,0 +1,13 @@
+.features {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.features h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.features p {
+  color: #666;
+}
