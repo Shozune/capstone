@@ -1,15 +1,17 @@
 import "./Hero.css";
-import ServicesCard from "../ServicesCard/ServicesCard";
+import ServiceCard from "../ServiceCard/ServiceCard";
 
 const Hero = () => {
   return (
     <section className="hero">
-      <div className="hero-left">
-        <span className="badge">Student Welfare Management System</span>
+      <div className="hero-content">
+        <div className="badge">Student Welfare Management System</div>
 
         <h1>
-          Comprehensive <br />
-          Student Care <br />
+          Comprehensive
+          <br />
+          Student Care
+          <br />
           Platform
         </h1>
 
@@ -20,28 +22,31 @@ const Hero = () => {
         </p>
 
         <div className="hero-buttons">
-          <button className="primary-btn">Access Portal →</button>
-          <button className="secondary-btn">Learn More</button>
+          <button className="btn-primary">
+            Access Portal
+            <span className="arrow">→</span>
+          </button>
+          <button className="btn-secondary">Learn More</button>
         </div>
       </div>
 
-      <div className="hero-right">
-        <div className="services-container">
-          <ServicesCard
-            title="Health Services Office"
+      <div className="hero-cards">
+        <div className="cards-container">
+          <ServiceCard
+            title="Health Services"
             description="Medical care & wellness"
           />
-          <ServicesCard
-            title="Admissions Office"
+          <ServiceCard
+            title="Guidance Services"
             description="Counseling & support"
           />
-          <ServicesCard
+          <ServiceCard
             title="Discipline Office"
             description="Student conduct"
           />
-          <ServicesCard
-            title="Student Development Office"
-            description="Scholarships & Discounts"
+          <ServiceCard
+            title="Student Development"
+            description="Programs & activities"
           />
         </div>
       </div>

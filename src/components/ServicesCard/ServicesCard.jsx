@@ -1,10 +1,12 @@
-import "./ServicesCard.css";
+import "./ServiceCard.css";
 
-const ServicesCard = ({ title, description }) => {
+const ServiceCard = ({ title, description, iconBg = "#dbeafe" }) => {
   return (
     <div className="service-card">
-      <div className="icon">💙</div>
-      <div>
+      <div className="service-icon" style={{ backgroundColor: iconBg }}>
+        {/* Icon placeholder */}
+      </div>
+      <div className="service-content">
         <h4>{title}</h4>
         <p>{description}</p>
       </div>
@@ -12,4 +14,4 @@ const ServicesCard = ({ title, description }) => {
   );
 };
 
-export default ServicesCard;
+export default ServiceCard;
