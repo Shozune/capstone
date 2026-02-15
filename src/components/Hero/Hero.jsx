@@ -1,5 +1,10 @@
+import { Link } from "react-router-dom";
 import "./Hero.css";
 import ServiceCard from "../ServiceCard/ServiceCard";
+import HSOIcon from "../../assets/HSOIcon.png";
+import AdIcon from "../../assets/AdIcon.png";
+import SDIcon from "../../assets/SDIcon.png";
+import DOIcon from "../../assets/DO.png";
 
 const Hero = () => {
   return (
@@ -22,10 +27,10 @@ const Hero = () => {
         </p>
 
         <div className="hero-buttons">
-          <button className="btn-primary">
+          <Link to="/signup" className="btn-primary">
             Access Portal
             <span className="arrow">→</span>
-          </button>
+          </Link>
           <button className="btn-secondary">Learn More</button>
         </div>
       </div>
@@ -33,20 +38,24 @@ const Hero = () => {
       <div className="hero-cards">
         <div className="cards-container">
           <ServiceCard
-            title="Health Services"
+            title="Health Services Office"
             description="Medical care & wellness"
+            icon={HSOIcon}
           />
           <ServiceCard
-            title="Guidance Services"
+            title="Admissions Office"
             description="Counseling & support"
+            icon={AdIcon}
           />
           <ServiceCard
             title="Discipline Office"
             description="Student conduct"
+            icon={DOIcon}
           />
           <ServiceCard
-            title="Student Development"
-            description="Programs & activities"
+            title="Student Development and Development Office"
+            description="Scholarships and Discounts"
+            icon={SDIcon}
           />
         </div>
       </div>

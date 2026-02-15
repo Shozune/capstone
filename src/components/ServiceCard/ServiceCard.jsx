@@ -1,10 +1,10 @@
 import "./ServiceCard.css";
 
-const ServiceCard = ({ title, description, iconBg = "#dbeafe" }) => {
+const ServiceCard = ({ title, description, icon, iconBg = "#dbeafe" }) => {
   return (
     <div className="service-card">
       <div className="service-icon" style={{ backgroundColor: iconBg }}>
-        {/* Icon placeholder */}
+        {icon && <img src={icon} alt={title} className="icon-image" />}
       </div>
       <div className="service-content">
         <h4>{title}</h4>

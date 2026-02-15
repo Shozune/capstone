@@ -18,7 +18,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  /* Icon placeholder */
+}
+
+.icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .service-content {

@@ -52,7 +52,15 @@
   background: #dbeafe;
   border-radius: 8px;
   margin-bottom: 16px;
-  /* Icon placeholder */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-image {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .feature-card h3 {
