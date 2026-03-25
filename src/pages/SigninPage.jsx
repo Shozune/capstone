@@ -6,7 +6,7 @@ const SigninPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/case-management");
+    navigate("/dashboard");
   };
 
   return (

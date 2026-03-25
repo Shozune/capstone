@@ -1,0 +1,405 @@
+/* Shared layout + simple UI interactions for Case Management sub-pages */
+
+.cc-page-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cc-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  background: #155dfc;
+  border: none;
+  border-radius: 6px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cc-btn-primary:hover {
+  background: #1447e6;
+}
+
+.cc-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0f172a;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cc-btn-secondary:hover {
+  background: #eff6ff;
+}
+
+/* Modal */
+.cc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 24px;
+  z-index: 2000;
+}
+
+.cc-modal {
+  width: 460px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 18px 60px rgba(15, 23, 42, 0.25);
+}
+
+.cc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cc-modal-title {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #0f172a;
+}
+
+.cc-modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.cc-modal-close:hover {
+  background: #f1f5f9;
+}
+
+.cc-modal-body {
+  padding: 16px 18px;
+}
+
+.cc-modal-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.cc-label {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #64748b;
+}
+
+.cc-input,
+.cc-textarea {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.cc-textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.cc-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 14px 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Case Conference */
+.cc-two-column {
+  display: flex;
+  gap: 24px;
+}
+
+.cc-col-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.cc-col-side {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.cc-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.cc-card-header {
+  padding: 18px 18px 0;
+}
+
+.cc-card-body {
+  padding: 16px 18px 18px;
+}
+
+.cc-schedule-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  background: #155dfc;
+  border: none;
+  border-radius: 6px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cc-schedule-btn:hover {
+  background: #1447e6;
+}
+
+.cc-calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cc-month-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cc-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.cc-icon-btn:hover {
+  background: #eff6ff;
+}
+
+.cc-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.cc-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cc-weekday {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #64748b;
+  text-align: center;
+}
+
+.cc-day {
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #0f172a;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.cc-day:hover {
+  background: #f8fafc;
+}
+
+.cc-day.has-event {
+  border-color: #155dfc;
+}
+
+.cc-day.selected {
+  border-color: #0ea5e9;
+  background: #e0f2fe;
+}
+
+.cc-upcoming-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cc-upcoming-item:last-child {
+  border-bottom: none;
+}
+
+.cc-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  height: 24px;
+  padding: 0 10px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.cc-pill.scheduled {
+  background: #eef2ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+
+.cc-pill.completed {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+.cc-pill.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+/* Tables */
+.cc-table-wrapper {
+  padding: 16px 18px 18px;
+}
+
+.cc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cc-table th {
+  text-align: left;
+  padding: 10px 8px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #0f172a;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.cc-table td {
+  padding: 14px 8px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.cc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Student Records */
+.cc-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cc-search {
+  flex: 1;
+  max-width: 520px;
+  position: relative;
+}
+
+.cc-search input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  outline: none;
+  background: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.cc-search input::placeholder {
+  color: #94a3b8;
+}
+
+@media (max-width: 1200px) {
+  .cc-two-column {
+    flex-direction: column;
+  }
+
+  .cc-col-side {
+    width: 100%;
+  }
+}
+

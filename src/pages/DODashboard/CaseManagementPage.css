@@ -1,4 +1,5 @@
-/* ── Layout ───────────────────────────────────────────── */
+/* Shared styles for the dashboard-like pages (Dashboard / Case Management) */
+
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
@@ -7,7 +8,7 @@
 
 .dashboard-main {
   flex: 1;
-  margin-left: 256px;
+  margin-left: 256px; /* sidebar width */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -53,7 +54,7 @@
   height: 20px;
   background: #dc2626;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 12px;
   color: white;
@@ -85,7 +86,7 @@
 }
 
 .header-user-name {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -94,7 +95,7 @@
 }
 
 .header-user-role {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
@@ -118,7 +119,7 @@
 }
 
 .page-title-row h1 {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 30px;
   line-height: 36px;
@@ -127,7 +128,7 @@
 }
 
 .page-title-row p {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
@@ -144,7 +145,7 @@
   background: #155dfc;
   border: none;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -173,20 +174,28 @@
 }
 
 .stat-value {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 30px;
   line-height: 36px;
   margin: 0 0 4px 0;
 }
 
-.stat-value.total   { color: #0f172a; }
-.stat-value.new     { color: #9810fa; }
-.stat-value.ongoing { color: #155dfc; }
-.stat-value.closed  { color: #00a63e; }
+.stat-value.total {
+  color: #0f172a;
+}
+.stat-value.new {
+  color: #9810fa;
+}
+.stat-value.ongoing {
+  color: #155dfc;
+}
+.stat-value.closed {
+  color: #00a63e;
+}
 
 .stat-label {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
@@ -194,7 +203,7 @@
   margin: 0;
 }
 
-/* ── Cases Panel ──────────────────────────────────────── */
+/* ── Cases Panel (Dashboard table section) ───────────── */
 .cases-panel {
   background: white;
   border: 1px solid #e2e8f0;
@@ -217,7 +226,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
@@ -233,11 +242,12 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #0f172a;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn-export:hover {
@@ -248,7 +258,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -279,7 +289,7 @@
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #0f172a;
@@ -310,7 +320,7 @@
   padding: 5px 9px;
   border: 1px solid transparent;
   border-radius: 12px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -342,7 +352,7 @@
 }
 
 .cases-table th {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -367,18 +377,16 @@
   background: #fafbfc;
 }
 
-/* Cell: Case ID */
 .cell-case-id {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #0f172a;
   white-space: nowrap;
 }
 
-/* Cell: Student */
 .cell-student-name {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #0f172a;
@@ -387,25 +395,23 @@
 }
 
 .cell-student-id {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 12px;
   color: #64748b;
   margin: 0;
 }
 
-/* Cell: Case Type / Officer */
 .cell-text {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #0f172a;
   white-space: nowrap;
 }
 
-/* Cell: Date */
 .cell-date {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #0f172a;
@@ -420,7 +426,7 @@
   height: 22px;
   padding: 3px 9px;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
@@ -428,14 +434,35 @@
   border: 1px solid transparent;
 }
 
-.badge-ongoing  { background: #dbeafe; color: #1447e6; }
-.badge-new      { background: #f3e8ff; color: #8200db; }
-.badge-pending  { background: #ffedd4; color: #ca3500; }
-.badge-closed   { background: #dcfce7; color: #008236; }
+.badge-ongoing {
+  background: #dbeafe;
+  color: #1447e6;
+}
+.badge-new {
+  background: #f3e8ff;
+  color: #8200db;
+}
+.badge-pending {
+  background: #ffedd4;
+  color: #ca3500;
+}
+.badge-closed {
+  background: #dcfce7;
+  color: #008236;
+}
 
-.badge-high     { background: #ffe2e2; color: #c10007; }
-.badge-medium   { background: #ffedd4; color: #ca3500; }
-.badge-low      { background: #dbeafe; color: #1447e6; }
+.badge-high {
+  background: #ffe2e2;
+  color: #c10007;
+}
+.badge-medium {
+  background: #ffedd4;
+  color: #ca3500;
+}
+.badge-low {
+  background: #dbeafe;
+  color: #1447e6;
+}
 
 /* Action button */
 .btn-view {
@@ -447,7 +474,7 @@
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 14px;
   color: #0f172a;
@@ -487,3 +514,4 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
