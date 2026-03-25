@@ -26,8 +26,8 @@ const Hero = () => {
           and wellness.
         </p>
 
-        <div className="hero-buttons">
-          <Link to="/signup" className="btn-primary">
+          <div className="hero-buttons">
+          <Link to="/signin" className="btn-primary">
             Access Portal
             <span className="arrow">→</span>
           </Link>

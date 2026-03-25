@@ -1,7 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./SigninPage.css";
 
 const SigninPage = () => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/case-management");
+  };
+
   return (
     <div className="signin-page">
       <div className="signin-container">
@@ -59,7 +66,7 @@ const SigninPage = () => {
             </div>
 
             {/* Form */}
-            <form className="signin-form">
+            <form className="signin-form" onSubmit={handleSubmit}>
               {/* Email */}
               <div className="form-group">
                 <label htmlFor="email">University Email</label>

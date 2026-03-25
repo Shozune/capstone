@@ -11,7 +11,7 @@ const CallToAction = () => {
           for your students.
         </p>
         <div className="cta-buttons">
-          <Link to="/case-management" className="cta-btn-primary">
+          <Link to="/signin" className="cta-btn-primary">
             Access Portal
             <span className="arrow">→</span>
           </Link>
