@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./CallToAction.css";
 
 const CallToAction = () => {
@@ -10,11 +11,11 @@ const CallToAction = () => {
           for your students.
         </p>
         <div className="cta-buttons">
-          <button className="cta-btn-primary">
+          <Link to="/case-management" className="cta-btn-primary">
             Access Portal
             <span className="arrow">→</span>
-          </button>
-          <button className="cta-btn-secondary">Create Account</button>
+          </Link>
+          <Link to="/signup" className="cta-btn-secondary">Create Account</Link>
         </div>
       </div>
     </section>
