@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import "../CaseManagementPage.css";
+import "./CaseManagementPage.css";
 import "./CaseManagementSubpages.css";
 
 const STUDENT_RECORDS = [
