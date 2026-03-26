@@ -86,32 +86,43 @@ const CaseConference = () => {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [selectedConference, setSelectedConference] = useState(null);
 
+  const [conferences, setConferences] = useState(CONFERENCES);
+
+  const [scheduleForm, setScheduleForm] = useState({
+    caseId: CONFERENCES[0]?.caseId || "",
+    date: "Feb 26, 2026",
+    time: "10:00 AM",
+    location: "e.g., Case Room, Discipline Office",
+    notes: "Additional information or special instructions",
+  });
+  const [scheduleErrors, setScheduleErrors] = useState({});
+
   const stats = useMemo(() => {
-    const scheduled = CONFERENCES.filter((c) => c.status === "scheduled").length;
-    const completed = CONFERENCES.filter((c) => c.status === "completed").length;
-    const cancelled = CONFERENCES.filter((c) => c.status === "cancelled").length;
+    const scheduled = conferences.filter((c) => c.status === "scheduled").length;
+    const completed = conferences.filter((c) => c.status === "completed").length;
+    const cancelled = conferences.filter((c) => c.status === "cancelled").length;
     // Simple heuristic for "this week": days 20-28
-    const thisWeek = CONFERENCES.filter((c) => c.day >= 20 && c.day <= 28).length;
+    const thisWeek = conferences.filter((c) => c.day >= 20 && c.day <= 28).length;
     return { scheduled, thisWeek, completed, cancelled };
-  }, []);
+  }, [conferences]);
 
   const eventsByDay = useMemo(() => {
     const map = new Map();
-    for (const c of CONFERENCES) {
+    for (const c of conferences) {
       map.set(c.day, (map.get(c.day) || []).concat(c));
     }
     return map;
-  }, []);
+  }, [conferences]);
 
   const upcoming = useMemo(() => {
-    const scheduled = CONFERENCES.filter((c) => c.status === "scheduled");
+    const scheduled = conferences.filter((c) => c.status === "scheduled");
     // Pick the first scheduled by day
     return scheduled.sort((a, b) => a.day - b.day)[0] || null;
-  }, []);
+  }, [conferences]);
 
   const conferenceList = useMemo(() => {
-    return [...CONFERENCES].sort((a, b) => a.day - b.day);
-  }, []);
+    return [...conferences].sort((a, b) => a.day - b.day);
+  }, [conferences]);
 
   const activeEvents = eventsByDay.get(selectedDay) || [];
 
@@ -415,43 +426,151 @@ const CaseConference = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const nextErrors = {};
+                if (!scheduleForm.caseId) nextErrors.caseId = "Case selection is required.";
+                if (!scheduleForm.date.trim()) nextErrors.date = "Date is required.";
+                if (!scheduleForm.time.trim()) nextErrors.time = "Time is required.";
+                if (!scheduleForm.location.trim()) nextErrors.location = "Location is required.";
+                if (!scheduleForm.notes.trim()) nextErrors.notes = "Notes are required.";
+
+                setScheduleErrors(nextErrors);
+                if (Object.keys(nextErrors).length > 0) return;
+
+                const dayMatch = scheduleForm.date.match(/(\d{1,2})/);
+                const day = dayMatch ? Number(dayMatch[1]) : 1;
+
+                const caseTitle =
+                  conferences.find((c) => c.caseId === scheduleForm.caseId)?.caseTitle ||
+                  scheduleForm.caseId;
+
+                const newConference = {
+                  conferenceId: `C-${Date.now()}`,
+                  caseId: scheduleForm.caseId,
+                  caseTitle,
+                  day,
+                  dateLabel: scheduleForm.date,
+                  timeLabel: scheduleForm.time,
+                  durationLabel: "1 hour",
+                  location: scheduleForm.location,
+                  status: "scheduled",
+                  attendees: [caseTitle, "Discipline Coordinator"],
+                  notes: scheduleForm.notes,
+                };
+
+                setConferences((prev) => [...prev, newConference]);
                 setIsScheduleOpen(false);
+                setScheduleErrors({});
+                setSelectedConference(null);
               }}
             >
               <div className="cc-modal-body">
                 <div className="cc-field" style={{ marginBottom: 12 }}>
                   <div className="cc-label">Select Case</div>
-                  <select className="cc-input" defaultValue={CONFERENCES[0].caseId}>
-                    {CONFERENCES.map((c) => (
-                      <option value={c.caseId} key={c.conferenceId}>
+                  <select
+                    className={`cc-input${scheduleErrors.caseId ? " cc-input-error" : ""}`}
+                    value={scheduleForm.caseId}
+                    onChange={(e) =>
+                      setScheduleForm((prev) => ({
+                        ...prev,
+                        caseId: e.target.value,
+                      }))
+                    }
+                    aria-invalid={Boolean(scheduleErrors.caseId)}
+                  >
+                    {conferences.map((c) => (
+                      <option value={c.caseId} key={c.caseId}>
                         {c.caseId} - {c.caseTitle}
                       </option>
                     ))}
                   </select>
+                  {scheduleErrors.caseId && (
+                    <div className="cc-form-error" role="alert">
+                      {scheduleErrors.caseId}
+                    </div>
+                  )}
                 </div>
 
                 <div className="cc-modal-row">
                   <div className="cc-field">
                     <div className="cc-label">Date</div>
-                    <input className="cc-input" defaultValue="Feb 26, 2026" />
+                    <input
+                      className={`cc-input${scheduleErrors.date ? " cc-input-error" : ""}`}
+                      value={scheduleForm.date}
+                      onChange={(e) =>
+                        setScheduleForm((prev) => ({
+                          ...prev,
+                          date: e.target.value,
+                        }))
+                      }
+                      aria-invalid={Boolean(scheduleErrors.date)}
+                    />
+                    {scheduleErrors.date && (
+                      <div className="cc-form-error" role="alert">
+                        {scheduleErrors.date}
+                      </div>
+                    )}
                   </div>
                   <div className="cc-field">
                     <div className="cc-label">Time</div>
-                    <input className="cc-input" defaultValue="10:00 AM" />
+                    <input
+                      className={`cc-input${scheduleErrors.time ? " cc-input-error" : ""}`}
+                      value={scheduleForm.time}
+                      onChange={(e) =>
+                        setScheduleForm((prev) => ({
+                          ...prev,
+                          time: e.target.value,
+                        }))
+                      }
+                      aria-invalid={Boolean(scheduleErrors.time)}
+                    />
+                    {scheduleErrors.time && (
+                      <div className="cc-form-error" role="alert">
+                        {scheduleErrors.time}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="cc-field" style={{ marginBottom: 10 }}>
                   <div className="cc-label">Location</div>
-                  <input className="cc-input" defaultValue="e.g., Case Room, Discipline Office" />
+                  <input
+                    className={`cc-input${
+                      scheduleErrors.location ? " cc-input-error" : ""
+                    }`}
+                    value={scheduleForm.location}
+                    onChange={(e) =>
+                      setScheduleForm((prev) => ({
+                        ...prev,
+                        location: e.target.value,
+                      }))
+                    }
+                    aria-invalid={Boolean(scheduleErrors.location)}
+                  />
+                  {scheduleErrors.location && (
+                    <div className="cc-form-error" role="alert">
+                      {scheduleErrors.location}
+                    </div>
+                  )}
                 </div>
 
                 <div className="cc-field">
                   <div className="cc-label">Notes</div>
                   <textarea
                     className="cc-textarea"
-                    defaultValue="Additional information or special instructions"
+                    value={scheduleForm.notes}
+                    onChange={(e) =>
+                      setScheduleForm((prev) => ({
+                        ...prev,
+                        notes: e.target.value,
+                      }))
+                    }
+                    aria-invalid={Boolean(scheduleErrors.notes)}
                   />
+                  {scheduleErrors.notes && (
+                    <div className="cc-form-error" role="alert">
+                      {scheduleErrors.notes}
+                    </div>
+                  )}
                 </div>
               </div>
 

@@ -71,27 +71,40 @@ const StudentRecords = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isManageOpen, setIsManageOpen] = useState(false);
+  const [records, setRecords] = useState(STUDENT_RECORDS);
+
+  const [createForm, setCreateForm] = useState({
+    studentName: "",
+    studentId: "",
+    program: "",
+    notes: "",
+  });
+  const [createErrors, setCreateErrors] = useState({});
+
+  const [manageStatus, setManageStatus] = useState("");
+  const [manageNotes, setManageNotes] = useState("");
+
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return STUDENT_RECORDS;
-    return STUDENT_RECORDS.filter((r) => {
+    if (!q) return records;
+    return records.filter((r) => {
       return (
         r.studentName.toLowerCase().includes(q) ||
         r.studentId.toLowerCase().includes(q) ||
         r.program.toLowerCase().includes(q)
       );
     });
-  }, [search]);
+  }, [search, records]);
 
   const stats = useMemo(() => {
     return {
-      total: STUDENT_RECORDS.length,
-      active: STUDENT_RECORDS.filter((r) => r.status === "active").length,
-      good: STUDENT_RECORDS.filter((r) => r.status === "good").length,
-      closed: STUDENT_RECORDS.filter((r) => r.status === "closed").length,
+      total: records.length,
+      active: records.filter((r) => r.status === "active").length,
+      good: records.filter((r) => r.status === "good").length,
+      closed: records.filter((r) => r.status === "closed").length,
     };
-  }, []);
+  }, [records]);
 
   return (
     <div className="dashboard-layout">
@@ -251,6 +264,8 @@ const StudentRecords = () => {
                             type="button"
                             onClick={() => {
                               setSelectedStudent(r);
+                              setManageStatus(r.status);
+                              setManageNotes(r.notes);
                               setIsManageOpen(true);
                             }}
                           >
@@ -349,6 +364,8 @@ const StudentRecords = () => {
                 type="button"
                 onClick={() => {
                   setIsManageOpen(true);
+                  setManageStatus(selectedStudent.status);
+                  setManageNotes(selectedStudent.notes);
                 }}
               >
                 Manage Record
@@ -388,6 +405,21 @@ const StudentRecords = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const next = records.map((r) =>
+                  r.studentId === selectedStudent.studentId
+                    ? {
+                        ...r,
+                        status: manageStatus,
+                        notes: manageNotes,
+                        lastIncident: r.lastIncident,
+                      }
+                    : r,
+                );
+                setRecords(next);
+                const updated = next.find(
+                  (r) => r.studentId === selectedStudent.studentId,
+                );
+                setSelectedStudent(updated || null);
                 setIsManageOpen(false);
               }}
             >
@@ -395,7 +427,11 @@ const StudentRecords = () => {
                 <div className="cc-modal-row">
                   <div className="cc-field">
                     <div className="cc-label">Student Status</div>
-                    <select className="cc-input" defaultValue={selectedStudent.status}>
+                    <select
+                      className="cc-input"
+                      value={manageStatus}
+                      onChange={(e) => setManageStatus(e.target.value)}
+                    >
                       <option value="active">active</option>
                       <option value="good">good</option>
                       <option value="closed">closed</option>
@@ -405,7 +441,11 @@ const StudentRecords = () => {
 
                 <div className="cc-field">
                   <div className="cc-label">Monitoring Notes</div>
-                  <textarea className="cc-textarea" defaultValue={selectedStudent.notes} />
+                  <textarea
+                    className="cc-textarea"
+                    value={manageNotes}
+                    onChange={(e) => setManageNotes(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -449,29 +489,139 @@ const StudentRecords = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const nextErrors = {};
+                if (!createForm.studentName.trim())
+                  nextErrors.studentName = "Student Name is required.";
+                if (!createForm.studentId.trim())
+                  nextErrors.studentId = "Student ID is required.";
+                if (!createForm.program.trim())
+                  nextErrors.program = "Program is required.";
+
+                setCreateErrors(nextErrors);
+                if (Object.keys(nextErrors).length > 0) return;
+
+                const now = new Date();
+                const monthNames = [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ];
+                const lastIncident = `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+                const newRecord = {
+                  studentName: createForm.studentName.trim(),
+                  studentId: createForm.studentId.trim(),
+                  program: createForm.program.trim(),
+                  cases: 0,
+                  lastIncident,
+                  status: "active",
+                  riskLevel: "medium",
+                  notes: createForm.notes.trim(),
+                };
+
+                setRecords((prev) => [...prev, newRecord]);
+                setSelectedStudent(newRecord);
                 setIsCreateOpen(false);
+                setCreateForm({
+                  studentName: "",
+                  studentId: "",
+                  program: "",
+                  notes: "",
+                });
+                setCreateErrors({});
               }}
             >
               <div className="cc-modal-body">
                 <div className="cc-modal-row">
                   <div className="cc-field">
                     <div className="cc-label">Student Name</div>
-                    <input className="cc-input" placeholder="e.g., Michael Tan" />
+                    <input
+                      className={`cc-input${
+                        createErrors.studentName ? " cc-input-error" : ""
+                      }`}
+                      placeholder="e.g., Michael Tan"
+                      value={createForm.studentName}
+                      onChange={(e) =>
+                        setCreateForm((prev) => ({
+                          ...prev,
+                          studentName: e.target.value,
+                        }))
+                      }
+                      aria-invalid={Boolean(createErrors.studentName)}
+                    />
+                    {createErrors.studentName && (
+                      <div className="cc-form-error" role="alert">
+                        {createErrors.studentName}
+                      </div>
+                    )}
                   </div>
                   <div className="cc-field">
                     <div className="cc-label">Student ID</div>
-                    <input className="cc-input" placeholder="2023-10234" />
+                    <input
+                      className={`cc-input${
+                        createErrors.studentId ? " cc-input-error" : ""
+                      }`}
+                      placeholder="2023-10234"
+                      value={createForm.studentId}
+                      onChange={(e) =>
+                        setCreateForm((prev) => ({
+                          ...prev,
+                          studentId: e.target.value,
+                        }))
+                      }
+                      aria-invalid={Boolean(createErrors.studentId)}
+                    />
+                    {createErrors.studentId && (
+                      <div className="cc-form-error" role="alert">
+                        {createErrors.studentId}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="cc-field">
                   <div className="cc-label">Program</div>
-                  <input className="cc-input" placeholder="BS Computer Science" />
+                  <input
+                    className={`cc-input${createErrors.program ? " cc-input-error" : ""}`}
+                    placeholder="BS Computer Science"
+                    value={createForm.program}
+                    onChange={(e) =>
+                      setCreateForm((prev) => ({
+                        ...prev,
+                        program: e.target.value,
+                      }))
+                    }
+                    aria-invalid={Boolean(createErrors.program)}
+                  />
+                  {createErrors.program && (
+                    <div className="cc-form-error" role="alert">
+                      {createErrors.program}
+                    </div>
+                  )}
                 </div>
 
                 <div className="cc-field" style={{ marginTop: 12 }}>
                   <div className="cc-label">Notes</div>
-                  <textarea className="cc-textarea" placeholder="Initial record notes..." />
+                  <textarea
+                    className="cc-textarea"
+                    placeholder="Initial record notes..."
+                    value={createForm.notes}
+                    onChange={(e) =>
+                      setCreateForm((prev) => ({
+                        ...prev,
+                        notes: e.target.value,
+                      }))
+                    }
+                  />
                 </div>
               </div>
 

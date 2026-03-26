@@ -1,11 +1,53 @@
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./SigninPage.css";
+import { verifyCredentials } from "../utils/authStore";
 
 const SigninPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [formError, setFormError] = useState("");
+
+  const emailRegex = useMemo(
+    () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    [],
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const nextErrors = {};
+    if (!email.trim()) nextErrors.email = "Email is required.";
+    else if (!emailRegex.test(email.trim()))
+      nextErrors.email = "Enter a valid email address.";
+
+    if (!password) nextErrors.password = "Password is required.";
+
+    setFieldErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    const user = verifyCredentials(email, password);
+    if (!user) {
+      setFormError("Invalid email or password.");
+      return;
+    }
+
+    setFormError("");
+    // Deterministic UI-only session storage for testable navigation.
+    const session = {
+      userId: user.id,
+      email: user.email,
+      office: user.office,
+      role: user.role,
+      name: `${user.firstName} ${user.lastName}`,
+      rememberMe,
+    };
+    window.localStorage.setItem("campuscare_session_v1", JSON.stringify(session));
+
     navigate("/dashboard");
   };
 
@@ -81,9 +123,19 @@ const SigninPage = () => {
                     type="email"
                     id="email"
                     placeholder="Enter university email"
-                    className="form-input with-icon"
+                    className={`form-input with-icon${
+                      fieldErrors.email ? " form-input-error" : ""
+                    }`}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    aria-invalid={Boolean(fieldErrors.email)}
                   />
                 </div>
+                {fieldErrors.email && (
+                  <p className="form-error" role="alert">
+                    {fieldErrors.email}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -97,24 +149,53 @@ const SigninPage = () => {
                     </svg>
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     placeholder="Enter password"
-                    className="form-input with-icon"
+                    className={`form-input with-icon cc-has-pw-toggle${
+                      fieldErrors.password ? " form-input-error" : ""
+                    }`}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    aria-invalid={Boolean(fieldErrors.password)}
                   />
+                  <button
+                    type="button"
+                    className="cc-pw-toggle-btn"
+                    onClick={() => setShowPassword((s) => !s)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
                 </div>
+                {fieldErrors.password && (
+                  <p className="form-error" role="alert">
+                    {fieldErrors.password}
+                  </p>
+                )}
               </div>
 
               {/* Remember Me & Forgot Password */}
               <div className="form-options">
                 <div className="remember-me">
-                  <input type="checkbox" id="remember" />
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
                   <label htmlFor="remember">Remember me</label>
                 </div>
                 <Link to="/forgot-password" className="forgot-password">
                   Forgot password?
                 </Link>
               </div>
+
+              {formError && (
+                <p className="form-error form-error-global" role="alert">
+                  {formError}
+                </p>
+              )}
 
               {/* Sign In Button */}
               <button type="submit" className="submit-button">

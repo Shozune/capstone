@@ -7,6 +7,10 @@ import CaseManagementPage from "./pages/DODashboard/CaseManagement";
 import DashboardPage from "./pages/DODashboard/Dashboard";
 import CaseConferencePage from "./pages/DODashboard/CaseConference";
 import StudentRecordsPage from "./pages/DODashboard/StudentRecords";
+import DocumentRequestsPage from "./pages/DODashboard/DocumentRequests";
+import ReferralsPage from "./pages/DODashboard/Referrals";
+import SanctionsPage from "./pages/DODashboard/Sanctions";
+import ReportsPage from "./pages/DODashboard/Reports";
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
         <Route path="/case-conference" element={<CaseConferencePage />} />
         <Route path="/student-records" element={<StudentRecordsPage />} />
         <Route path="/case-management" element={<CaseManagementPage />} />
+        <Route path="/document-requests" element={<DocumentRequestsPage />} />
+        <Route path="/referrals" element={<ReferralsPage />} />
+        <Route path="/sanctions" element={<SanctionsPage />} />
+        <Route path="/reports" element={<ReportsPage />} />
       </Routes>
     </Router>
   );

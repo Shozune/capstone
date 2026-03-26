@@ -327,6 +327,20 @@
   border-color: #fecaca;
 }
 
+/* Form validation helpers (used in Dashboard / Case Management / subpages) */
+.cc-input-error {
+  border-color: #f87171;
+}
+
+.cc-form-error {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #c10007;
+  margin-top: 6px;
+}
+
 /* Tables */
 .cc-table-wrapper {
   padding: 16px 18px 18px;
