@@ -1,122 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import "./CaseManagementPage.css";
 import "./CaseManagementSubpages.css";
 import { CASE_TYPE_OPTIONS, PRIORITY_OPTIONS } from "../../data/mockCases";
 import { useCases } from "../../hooks/useCases";
 import { DEFAULT_NOTIFICATIONS } from "../../data/mockNotifications";
-
-const CASES = [
-  {
-    id: "DC-2024-089",
-    student: "Michael Tan",
-    studentId: "2023-10234",
-    caseType: "Academic Dishonesty",
-    status: "ongoing",
-    priority: "high",
-    date: "Jan 24, 2024",
-    officer: "Prof. Santos",
-    description:
-      "Reported academic dishonesty based on irregular exam submission and supporting statements.",
-    evidence: [
-      { name: "Exam Scenarios - Michael Tan.pdf", kind: "exam_screenshots" },
-    ],
-  },
-  {
-    id: "DC-2024-090",
-    student: "Sarah Wong",
-    studentId: "2023-11056",
-    caseType: "Code of Conduct Violation",
-    status: "new",
-    priority: "medium",
-    date: "Jan 26, 2024",
-    officer: "Dr. Reyes",
-    description:
-      "Violation of campus conduct guidelines requiring review of incident reports and related documentation.",
-    evidence: [{ name: "Incident Report - Sarah Wong.pdf", kind: "report" }],
-  },
-  {
-    id: "DC-2024-091",
-    student: "James Garcia",
-    studentId: "2024-10112",
-    caseType: "Attendance Violation",
-    status: "pending",
-    priority: "low",
-    date: "Jan 27, 2024",
-    officer: "Prof. Cruz",
-    description:
-      "Attendance violations reported and pending further verification of attendance logs and communications.",
-    evidence: [{ name: "Attendance Logs - James Garcia.pdf", kind: "records" }],
-  },
-  {
-    id: "DC-2024-092",
-    student: "Lisa Martinez",
-    studentId: "2023-12345",
-    caseType: "Property Damage",
-    status: "ongoing",
-    priority: "high",
-    date: "Jan 28, 2024",
-    officer: "Admin Lopez",
-    description:
-      "Incident involving property damage; evidence includes damages documentation and witness notes.",
-    evidence: [
-      { name: "Damage Photos - Lisa Martinez.png", kind: "photos" },
-      { name: "Witness Note - Lisa Martinez.pdf", kind: "statement" },
-    ],
-  },
-  {
-    id: "DC-2024-088",
-    student: "Robert Cruz",
-    studentId: "2023-09876",
-    caseType: "Plagiarism",
-    status: "closed",
-    priority: "medium",
-    date: "Jan 22, 2024",
-    officer: "Prof. Gonzales",
-    description:
-      "Plagiarism allegation reviewed and closed after evidence evaluation and decision documentation.",
-    evidence: [{ name: "Plagiarism Report - Robert Cruz.pdf", kind: "report" }],
-  },
-  {
-    id: "DC-2024-087",
-    student: "Angela Reyes",
-    studentId: "2023-11234",
-    caseType: "Disruptive Behavior",
-    status: "new",
-    priority: "low",
-    date: "Jan 21, 2024",
-    officer: "Prof. Santos",
-    description:
-      "Disruptive behavior reported; requires initial review and scheduling of a case conference.",
-    evidence: [{ name: "Disciplinary Notes - Angela Reyes.pdf", kind: "notes" }],
-  },
-  {
-    id: "DC-2024-086",
-    student: "Kevin Santos",
-    studentId: "2024-10567",
-    caseType: "Cheating",
-    status: "ongoing",
-    priority: "high",
-    date: "Jan 20, 2024",
-    officer: "Dr. Tan",
-    description:
-      "Cheating allegation with supporting exam evidence; ongoing evaluation and interview scheduling.",
-    evidence: [{ name: "Cheating Evidence - Kevin Santos.pdf", kind: "exam_screenshots" }],
-  },
-  {
-    id: "DC-2024-085",
-    student: "Diana Lopez",
-    studentId: "2023-12678",
-    caseType: "Falsification of Records",
-    status: "pending",
-    priority: "high",
-    date: "Jan 19, 2024",
-    officer: "Registrar",
-    description:
-      "Potential falsification reported; requires cross-checking of submitted records and supporting documents.",
-    evidence: [{ name: "Records Comparison - Diana Lopez.pdf", kind: "records" }],
-  },
-];
 
 const TABS = [
   { key: "all", label: (cases) => `All Cases (${cases.length})` },
@@ -155,9 +43,12 @@ const CaseManagement = () => {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const {
     cases,
+    loading: casesLoading,
+    fetchError: casesError,
+    refresh: refreshCases,
     createCase,
     updateCaseStatus,
-  } = useCases(CASES);
+  } = useCases([]);
 
   const unreadCount = notifications.filter((n) => n.unread).length;
 
@@ -172,6 +63,11 @@ const CaseManagement = () => {
   const [newCaseErrors, setNewCaseErrors] = useState({});
   const [statusUpdate, setStatusUpdate] = useState("ongoing");
   const [statusNote, setStatusNote] = useState("");
+  const [caseModalError, setCaseModalError] = useState(null);
+
+  useEffect(() => {
+    setCaseModalError(null);
+  }, [selectedCase]);
 
   const filtered = useMemo(() => {
     return cases.filter((c) => {
@@ -370,6 +266,41 @@ const CaseManagement = () => {
         </header>
 
         <main className="dashboard-content">
+          {(casesError || (casesLoading && cases.length === 0)) && (
+            <div
+              role="status"
+              style={{
+                marginBottom: 16,
+                padding: "12px 14px",
+                borderRadius: 10,
+                background: casesError ? "#fef2f2" : "#f8fafc",
+                border: `1px solid ${casesError ? "#fecaca" : "#e2e8f0"}`,
+                color: casesError ? "#991b1b" : "#475569",
+                fontSize: 14,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <span>
+                {casesError
+                  ? `Could not load cases: ${casesError}`
+                  : "Loading cases…"}
+              </span>
+              {casesError && (
+                <button
+                  type="button"
+                  className="cc-btn-secondary"
+                  style={{ height: 32, padding: "0 12px" }}
+                  onClick={() => refreshCases()}
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          )}
           <div className="page-title-row">
             <div>
               <h1>Case Management</h1>
@@ -747,6 +678,11 @@ const CaseManagement = () => {
               </div>
             </div>
 
+            {caseModalError && (
+              <div className="cc-form-error" role="alert" style={{ padding: "0 20px 12px" }}>
+                {caseModalError}
+              </div>
+            )}
             <div className="cc-modal-actions">
               <button
                 className="cc-btn-secondary"
@@ -758,9 +694,16 @@ const CaseManagement = () => {
               <button
                 className="cc-btn-primary"
                 type="button"
-                onClick={() => {
-                  updateCaseStatus(selectedCase.id, statusUpdate, statusNote);
-                  setSelectedCase(null);
+                onClick={async () => {
+                  setCaseModalError(null);
+                  try {
+                    await updateCaseStatus(selectedCase.id, statusUpdate, statusNote);
+                    setSelectedCase(null);
+                  } catch (err) {
+                    setCaseModalError(
+                      err?.message || "Could not update case. Check Supabase and try again.",
+                    );
+                  }
                 }}
               >
                 Save Changes
@@ -791,7 +734,7 @@ const CaseManagement = () => {
             </div>
 
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const nextErrors = {};
 
@@ -809,34 +752,45 @@ const CaseManagement = () => {
                 setNewCaseErrors(nextErrors);
                 if (Object.keys(nextErrors).length > 0) return;
 
-                createCase({
-                  student: newCaseForm.student,
-                  studentId: newCaseForm.studentId,
-                  caseType: newCaseForm.caseType,
-                  description: newCaseForm.description,
-                  priority: newCaseForm.priority,
-                  evidence: [
-                    {
-                      name: newCaseEvidence.name,
-                      kind: "upload",
-                    },
-                  ],
-                  officer: "Discipline Office",
-                });
+                try {
+                  await createCase({
+                    student: newCaseForm.student,
+                    studentId: newCaseForm.studentId,
+                    caseType: newCaseForm.caseType,
+                    description: newCaseForm.description,
+                    priority: newCaseForm.priority,
+                    evidence: [
+                      {
+                        name: newCaseEvidence.name,
+                        kind: "upload",
+                      },
+                    ],
+                    officer: "Discipline Office",
+                  });
 
-                setIsNewCaseOpen(false);
-                setNewCaseForm({
-                  student: "",
-                  studentId: "",
-                  caseType: "",
-                  priority: "medium",
-                  description: "",
-                });
-                setNewCaseEvidence(null);
-                setNewCaseErrors({});
+                  setIsNewCaseOpen(false);
+                  setNewCaseForm({
+                    student: "",
+                    studentId: "",
+                    caseType: "",
+                    priority: "medium",
+                    description: "",
+                  });
+                  setNewCaseEvidence(null);
+                  setNewCaseErrors({});
+                } catch (err) {
+                  setNewCaseErrors({
+                    _submit: err?.message || "Could not create case. Check Supabase and try again.",
+                  });
+                }
               }}
             >
               <div className="cc-modal-body">
+                {newCaseErrors._submit && (
+                  <div className="cc-form-error" role="alert" style={{ marginBottom: 12 }}>
+                    {newCaseErrors._submit}
+                  </div>
+                )}
                 <div className="cc-modal-row">
                   <div className="cc-field">
                     <div className="cc-label">Student Name</div>

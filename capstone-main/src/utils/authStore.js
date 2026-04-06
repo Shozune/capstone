@@ -1,4 +1,3 @@
-import { DEFAULT_USERS } from "../data/mockUsers";
 import { loadJson, saveJson } from "./localStorage";
 
 const USERS_KEY = "campuscare_users_v1";
@@ -6,7 +5,7 @@ const RESET_KEY = "campuscare_reset_v1";
 
 export function getUsers() {
   const stored = loadJson(USERS_KEY, null);
-  return Array.isArray(stored) && stored.length > 0 ? stored : DEFAULT_USERS;
+  return Array.isArray(stored) && stored.length > 0 ? stored : [];
 }
 
 export function setUsers(users) {

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Building2,
@@ -11,6 +11,8 @@ import {
   Stethoscope,
 } from "lucide-react";
 import "./LandingPage.css";
+import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
+import { formatLandingMetric } from "../utils/landingStats";
 
 import campusCareLogo from "../assets/CampusCareLogo.png";
 import campusCareWordmark from "../assets/CampusCareText.png";
@@ -81,13 +83,54 @@ const benefits = [
   },
 ];
 
-const stats = [
-  { label: "Active Students", value: "100+" },
-  { label: "Monthly Visits", value: "100+" },
-  { label: "Office Staff", value: "12" },
+const LANDING_STATS_META = [
+  { label: "Active Students", key: "active_students" },
+  { label: "Monthly Visits", key: "monthly_visits" },
+  { label: "Office Staff", key: "office_staff" },
 ];
 
+/** When env keys are missing or RPCs fail (e.g. migrations not applied yet). Active students are always 0 in the UI. */
+const LANDING_STATS_FALLBACK = {
+  active_students: 0,
+  monthly_visits: 0,
+  office_staff: 0,
+};
+
 const LandingPage = () => {
+  const [landingMetrics, setLandingMetrics] = useState(LANDING_STATS_FALLBACK);
+
+  useEffect(() => {
+    let cancelled = false;
+    const n = (v) => {
+      const x = Number(v);
+      return Number.isFinite(x) ? x : 0;
+    };
+
+    if (!isSupabaseConfigured() || !supabase) {
+      setLandingMetrics(LANDING_STATS_FALLBACK);
+      return undefined;
+    }
+
+    (async () => {
+      const staffPromise = supabase.rpc("get_auth_registered_user_count");
+      await supabase.from("landing_page_visits").insert({});
+      const [visRes, staffRes] = await Promise.all([
+        supabase.rpc("get_landing_monthly_visit_count"),
+        staffPromise,
+      ]);
+      if (cancelled) return;
+      setLandingMetrics({
+        active_students: 0,
+        monthly_visits: visRes.error ? 0 : n(visRes.data),
+        office_staff: staffRes.error ? 0 : n(staffRes.data),
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     const fill = document.getElementById("lp-scroll-progress-fill");
     const onScroll = () => {
@@ -286,11 +329,16 @@ const LandingPage = () => {
             </div>
             <div className="lp-why-aside lp-reveal lp-reveal-right">
               <div className="lp-stats-panel">
-                {stats.map((s) => (
+                {LANDING_STATS_META.map((s) => (
                   <div key={s.label} className="lp-stat-card">
                     <div>
                       <p className="lp-stat-label">{s.label}</p>
-                      <p className="lp-stat-value">{s.value}</p>
+                      <p className="lp-stat-value">
+                        {formatLandingMetric(
+                          s.key,
+                          s.key === "active_students" ? 0 : landingMetrics[s.key],
+                        )}
+                      </p>
                     </div>
                     <div className="lp-benefit-check lp-check-ring" aria-hidden>
                       <CircleCheck

@@ -1,6 +1,6 @@
 /**
  * Maps staff `office` from signup / profile to the default app route (RBAC landing).
- * Keys match OFFICE_OPTIONS values in mockUsers.
+ * Keys match OFFICE_OPTIONS values in `data/mockUsers.js`.
  */
 const OFFICE_HOME_ROUTE = {
   health: "/health-services",

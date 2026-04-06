@@ -36,11 +36,5 @@ export const supabase = isSupabaseConfigured()
         autoRefreshToken: true,
         detectSessionInUrl: true,
       },
-      global: {
-        headers: {
-          apikey: anonKey,
-          Authorization: `Bearer ${anonKey}`,
-        },
-      },
     })
   : null;

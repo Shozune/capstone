@@ -1,18 +1,20 @@
+import { useCallback, useEffect, useState } from "react";
 import { usePersistentState } from "./usePersistentState";
-import { DEFAULT_CASES, PRIORITY_OPTIONS, STATUS_OPTIONS } from "../data/mockCases";
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../data/mockCases";
+import { supabase, isSupabaseConfigured } from "../lib/supabaseClient";
+import { buildCaseInsertRow, rowToCase } from "../utils/disciplineCaseMapper";
 
 const CASES_KEY = "campuscare_cases_v1";
 
 function parseCaseIndex(id) {
-  // Expected format: DC-2024-089
   const parts = String(id).split("-");
   const last = parts[parts.length - 1];
   const n = Number(last);
   return Number.isFinite(n) ? n : 0;
 }
 
-function makeNextCaseId(cases) {
-  const year = "2024";
+function makeNextCaseIdFromList(cases) {
+  const year = String(new Date().getFullYear());
   const prefix = `DC-${year}-`;
   const maxIdx = cases.reduce((acc, c) => Math.max(acc, parseCaseIndex(c.id)), 0);
   const next = maxIdx + 1;
@@ -27,84 +29,182 @@ function getDefaultStatus(status) {
   return STATUS_OPTIONS.includes(status) ? status : "new";
 }
 
-export function useCases(initialCases = DEFAULT_CASES) {
-  const [cases, setCases] = usePersistentState(CASES_KEY, initialCases);
+export function useCases(initialCases = []) {
+  const useRemote = Boolean(isSupabaseConfigured() && supabase);
 
-  const createCase = ({
-    student,
-    studentId,
-    caseType,
-    description,
-    evidence = [],
-    priority = "medium",
-    officer = "Discipline Office",
-  }) => {
-    const id = makeNextCaseId(cases);
-    const now = new Date();
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const date = `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  const [localCases, setLocalCases] = usePersistentState(CASES_KEY, initialCases);
+  const [remoteCases, setRemoteCases] = useState([]);
+  const [loading, setLoading] = useState(useRemote);
+  const [fetchError, setFetchError] = useState(null);
 
-    const newCase = {
-      id,
-      student: student.trim(),
-      studentId: studentId.trim(),
-      caseType,
-      status: "new",
-      priority: getDefaultPriority(priority),
-      date,
-      officer,
-      description: description.trim(),
-      evidence,
+  const loadRemote = useCallback(async () => {
+    if (!supabase) return;
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("discipline_cases")
+      .select("*")
+      .order("reported_at", { ascending: false });
+    setLoading(false);
+    if (error) {
+      setFetchError(error.message);
+      return;
+    }
+    setFetchError(null);
+    setRemoteCases((data || []).map(rowToCase));
+  }, []);
+
+  useEffect(() => {
+    if (!useRemote) {
+      setLoading(false);
+      return undefined;
+    }
+    loadRemote();
+
+    const channel = supabase
+      .channel("discipline_cases_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "discipline_cases" },
+        () => {
+          loadRemote();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
     };
+  }, [useRemote, loadRemote]);
 
-    setCases((prev) => [...prev, newCase]);
-    return newCase;
-  };
+  const cases = useRemote ? remoteCases : localCases;
 
-  const updateCaseStatus = (caseId, status, note) => {
-    const nextStatus = getDefaultStatus(status);
-    setCases((prev) =>
-      prev.map((c) =>
-        c.id === caseId
-          ? {
-              ...c,
-              status: nextStatus,
-              description: note ? `${c.description}\n\n${note}` : c.description,
-            }
-          : c,
-      ),
-    );
-  };
+  const createCase = useCallback(
+    async ({
+      student,
+      studentId,
+      caseType,
+      description,
+      evidence = [],
+      priority = "medium",
+      officer = "Discipline Office",
+    }) => {
+      const pri = getDefaultPriority(priority);
 
-  const appendEvidence = (caseId, evidenceItem) => {
-    setCases((prev) =>
-      prev.map((c) =>
-        c.id === caseId
-          ? { ...c, evidence: [...(c.evidence || []), evidenceItem] }
-          : c,
-      ),
-    );
-  };
+      if (!useRemote) {
+        const id = makeNextCaseIdFromList(localCases);
+        const now = new Date();
+        const monthNames = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        const date = `${monthNames[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+        const newCase = {
+          id,
+          student: student.trim(),
+          studentId: studentId.trim(),
+          caseType,
+          status: "new",
+          priority: pri,
+          date,
+          officer,
+          description: description.trim(),
+          evidence,
+        };
+        setLocalCases((prev) => [...prev, newCase]);
+        return newCase;
+      }
+
+      const id = makeNextCaseIdFromList(remoteCases);
+      const row = buildCaseInsertRow(id, {
+        student,
+        studentId,
+        caseType,
+        description,
+        evidence,
+        priority: pri,
+        officer,
+      });
+      if (!supabase) throw new Error("Supabase client is not available.");
+      const { data, error } = await supabase.from("discipline_cases").insert(row).select().single();
+      if (error) throw error;
+      const mapped = rowToCase(data);
+      await loadRemote();
+      return mapped;
+    },
+    [useRemote, localCases, remoteCases, setLocalCases, loadRemote],
+  );
+
+  const updateCaseStatus = useCallback(
+    async (caseId, status, note) => {
+      const nextStatus = getDefaultStatus(status);
+      if (!useRemote) {
+        setLocalCases((prev) =>
+          prev.map((c) =>
+            c.id === caseId
+              ? {
+                  ...c,
+                  status: nextStatus,
+                  description: note ? `${c.description}\n\n${note}` : c.description,
+                }
+              : c,
+          ),
+        );
+        return;
+      }
+      const current = remoteCases.find((c) => c.id === caseId);
+      if (!current) return;
+      const newDesc = note ? `${current.description}\n\n${note}` : current.description;
+      if (!supabase) return;
+      const { error } = await supabase
+        .from("discipline_cases")
+        .update({ status: nextStatus, description: newDesc })
+        .eq("id", caseId);
+      if (error) throw error;
+      await loadRemote();
+    },
+    [useRemote, remoteCases, setLocalCases, loadRemote],
+  );
+
+  const appendEvidence = useCallback(
+    async (caseId, evidenceItem) => {
+      if (!useRemote) {
+        setLocalCases((prev) =>
+          prev.map((c) =>
+            c.id === caseId ? { ...c, evidence: [...(c.evidence || []), evidenceItem] } : c,
+          ),
+        );
+        return;
+      }
+      const current = remoteCases.find((c) => c.id === caseId);
+      if (!current) return;
+      const ev = [...(current.evidence || []), evidenceItem];
+      if (!supabase) return;
+      const { error } = await supabase.from("discipline_cases").update({ evidence: ev }).eq("id", caseId);
+      if (!error) await loadRemote();
+    },
+    [useRemote, remoteCases, setLocalCases, loadRemote],
+  );
+
+  const setCases = useRemote ? setRemoteCases : setLocalCases;
 
   return {
     cases,
+    loading,
+    fetchError,
+    refresh: loadRemote,
     createCase,
     updateCaseStatus,
     appendEvidence,
     setCases,
   };
 }
-
