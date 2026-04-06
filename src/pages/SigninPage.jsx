@@ -3,10 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import "./SigninPage.css";
 import { verifyCredentials } from "../utils/authStore";
 
+const PORTAL_ROUTES = {
+  do: "/dashboard",
+  health: "/health-services",
+  sdao: "/sdao",
+};
+
 const SigninPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [portal, setPortal] = useState("do");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -42,13 +49,14 @@ const SigninPage = () => {
       userId: user.id,
       email: user.email,
       office: user.office,
+      portal,
       role: user.role,
       name: `${user.firstName} ${user.lastName}`,
       rememberMe,
     };
     window.localStorage.setItem("campuscare_session_v1", JSON.stringify(session));
 
-    navigate("/dashboard");
+    navigate(PORTAL_ROUTES[portal] ?? "/dashboard");
   };
 
   return (
@@ -173,6 +181,23 @@ const SigninPage = () => {
                     {fieldErrors.password}
                   </p>
                 )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="office-portal">Office portal</label>
+                <select
+                  id="office-portal"
+                  className="form-input signin-office-select"
+                  value={portal}
+                  onChange={(e) => setPortal(e.target.value)}
+                >
+                  <option value="do">Dean&apos;s Office (DO)</option>
+                  <option value="health">Health Services</option>
+                  <option value="sdao">SDAO</option>
+                </select>
+                <p className="signin-office-hint">
+                  Choose which workspace to open after sign-in (frontend preview).
+                </p>
               </div>
 
               {/* Remember Me & Forgot Password */}

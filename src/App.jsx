@@ -11,6 +11,8 @@ import DocumentRequestsPage from "./pages/DODashboard/DocumentRequests";
 import ReferralsPage from "./pages/DODashboard/Referrals";
 import SanctionsPage from "./pages/DODashboard/Sanctions";
 import ReportsPage from "./pages/DODashboard/Reports";
+import HealthServices from "./pages/HealthServices/HealthServices";
+import SDAO from "./pages/SDAO/SDAO";
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/signin" element={<SigninPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/do" element={<DashboardPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/health-services" element={<HealthServices />} />
+        <Route path="/sdao" element={<SDAO />} />
         <Route path="/case-conference" element={<CaseConferencePage />} />
         <Route path="/student-records" element={<StudentRecordsPage />} />
         <Route path="/case-management" element={<CaseManagementPage />} />
