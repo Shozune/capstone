@@ -62,7 +62,25 @@
   z-index: 2000;
 }
 
+.cc-modal-overlay--center {
+  justify-content: center;
+  align-items: center;
+}
+
+.cc-modal--wide {
+  width: min(560px, 100%);
+  max-height: min(90vh, 720px);
+  display: flex;
+  flex-direction: column;
+}
+
+.cc-modal--wide .cc-modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
 .cc-modal {
+  position: relative;
   width: 460px;
   background: #ffffff;
   border: 1px solid #e2e8f0;

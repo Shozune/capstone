@@ -29,6 +29,45 @@
   gap: 12px;
 }
 
+/* Office portals: page title left, utilities right (Figma HSO / SDAO top bar) */
+.dashboard-header.office-header--split {
+  justify-content: space-between;
+  gap: 24px;
+  padding-left: 32px;
+  padding-right: 24px;
+}
+
+.office-header-title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.office-header-title-block h1 {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.office-header-title-block p {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.office-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 .header-notifications {
   position: relative;
   width: 36px;

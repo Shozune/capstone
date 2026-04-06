@@ -8,13 +8,19 @@ import "./Sidebar.css";
  * @param {string} [props.activeNavId] — active item id when using local nav
  * @param {(id: string) => void} [props.onNavSelect]
  * @param {string} [props.departmentTag] — subtitle under CampusCare
+ * @param {() => void} [props.onLogoutRequest] — if set, called instead of immediate sign-out (e.g. confirm modal)
+ * @param {() => void} [props.onSettingsClick]
  */
-function Sidebar({ navItems, activeNavId, onNavSelect, departmentTag }) {
+function Sidebar({ navItems, activeNavId, onNavSelect, departmentTag, onLogoutRequest, onSettingsClick }) {
   const location = useLocation();
   const navigate = useNavigate();
   const useLocalNav = Array.isArray(navItems) && typeof onNavSelect === "function";
 
   const handleLogout = () => {
+    if (typeof onLogoutRequest === "function") {
+      onLogoutRequest();
+      return;
+    }
     window.localStorage.removeItem("campuscare_session_v1");
     navigate("/signin");
   };
@@ -72,7 +78,13 @@ function Sidebar({ navItems, activeNavId, onNavSelect, departmentTag }) {
       </nav>
 
       <div className="sidebar-footer">
-        <button type="button" className="sidebar-nav-item">
+        <button
+          type="button"
+          className="sidebar-nav-item"
+          onClick={() => {
+            if (typeof onSettingsClick === "function") onSettingsClick();
+          }}
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="6.667" stroke="currentColor" strokeWidth="1.5" />
             <path d="M8 5.333V8M8 10.667h.007" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

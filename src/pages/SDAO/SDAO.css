@@ -1,220 +1,393 @@
-.sdao-page .sdao-primary-cta {
-  background: #7c3aed;
+/* SDAO / Scholarship Management — CampusCare screenshots */
+
+.sdao-page {
+  --sdao-blue: #2563eb;
+  --sdao-blue-dark: #1d4ed8;
+  --sdao-purple: #7c3aed;
+  --sdao-purple-dark: #6d28d9;
 }
 
-.sdao-page .sdao-primary-cta:hover {
-  background: #6d28d9;
+/* Shared list rows from HealthServices.css — purple accent for SDAO referrals */
+.sdao-page .hs-ref-stat-icon {
+  background: #f5f3ff !important;
+  color: #7c3aed !important;
 }
 
-.sdao-stats-grid {
+.sdao-page .dashboard-content {
+  background: #f8fafc;
+}
+
+/* KPI cards with icon tile (top-right) */
+.sdao-kpi-row {
+  display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.sdao-two-col {
-  display: grid;
-  grid-template-columns: 1fr minmax(260px, 320px);
-  gap: 24px;
-  align-items: start;
-}
-
-.sdao-side-stack {
-  display: flex;
-  flex-direction: column;
   gap: 16px;
+  margin-bottom: 24px;
 }
 
-.sdao-spotlight {
-  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-  border: 1px solid #ddd6fe;
+.sdao-kpi-stat {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  padding: 20px 20px 18px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
-.sdao-spotlight-label {
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #6d28d9;
-  margin: 0;
-}
-
-.sdao-spotlight-title {
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 26px;
-  color: #1e1b4b;
-  margin: 0;
-}
-
-.sdao-spotlight-meta {
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  color: #5b21b6;
-  margin: 0;
-}
-
-.sdao-ghost-btn {
-  align-self: flex-start;
-  margin-top: 4px;
-  padding: 8px 14px;
+.sdao-kpi-stat-icon {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
-  border: 1px solid #c4b5fd;
-  background: #fff;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  color: #5b21b6;
-  cursor: pointer;
-}
-
-.sdao-ghost-btn:hover {
-  background: #faf5ff;
-}
-
-.sdao-kpi-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.sdao-kpi-label {
-  font-family: "Inter", sans-serif;
-  font-size: 13px;
-  color: #64748b;
-  margin: 0 0 8px 0;
-}
-
-.sdao-kpi-value {
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 36px;
-  line-height: 40px;
-  color: #0f172a;
-  margin: 0;
-}
-
-.sdao-kpi-suffix {
-  font-size: 18px;
-  color: #64748b;
-  margin-left: 2px;
-}
-
-.sdao-kpi-delta {
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #15803d;
-  margin: 8px 0 0 0;
-}
-
-.sdao-search {
-  max-width: 560px;
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.sdao-banner {
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid #e9d5ff;
-  background: #faf5ff;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  line-height: 22px;
-  color: #5b21b6;
-}
-
-.sdao-report-grid {
-  display: grid;
-  grid-template-columns: minmax(260px, 320px) 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-.sdao-donut-card {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.sdao-donut-title {
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: #0f172a;
-  margin: 0 0 16px 0;
-}
-
-.sdao-donut {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  background: conic-gradient(#7c3aed 0deg 200deg, #38bdf8 200deg 300deg, #34d399 300deg 360deg);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.sdao-donut-inner {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-}
-
-.sdao-legend {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.sdao-kpi-stat-label {
   font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 48px 8px 0;
+  line-height: 18px;
 }
 
-.sdao-legend li {
+.sdao-kpi-stat-value {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  color: #111827;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+}
+
+.sdao-kpi-stat-sub {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Distribution bars */
+.sdao-distribution-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.sdao-distribution-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sdao-distribution-title {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827;
+  margin: 0 0 4px 0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.sdao-dot {
-  width: 10px;
+.sdao-distribution-sub {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.sdao-bar-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 100px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.sdao-bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.sdao-bar-label {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.sdao-bar-track {
   height: 10px;
-  border-radius: 50%;
-  display: inline-block;
+  background: #f3f4f6;
+  border-radius: 999px;
+  overflow: hidden;
 }
 
-.sdao-dot-a {
-  background: #7c3aed;
+.sdao-bar-fill {
+  height: 100%;
+  border-radius: 999px;
 }
 
-.sdao-dot-b {
-  background: #38bdf8;
+.sdao-bar-meta {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  text-align: right;
 }
 
-.sdao-dot-c {
-  background: #34d399;
+/* Two-column mid section */
+.sdao-mid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-@media (max-width: 1200px) {
-  .sdao-stats-grid {
+.sdao-program-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sdao-program-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #374151;
+}
+
+.sdao-program-list li:last-child {
+  border-bottom: none;
+}
+
+.sdao-program-list strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Bottom metrics strip */
+.sdao-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.sdao-metric-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.sdao-metric-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+}
+
+.sdao-metric-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.sdao-metric-trend {
+  font-size: 13px;
+  font-weight: 500;
+  color: #16a34a;
+  margin: 0;
+}
+
+.sdao-metric-muted {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Toolbar */
+.sdao-toolbar-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.sdao-btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--sdao-blue);
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.sdao-btn-export:hover {
+  background: var(--sdao-blue-dark);
+}
+
+.sdao-btn-purple {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--sdao-purple);
+  border: none;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.sdao-btn-purple:hover {
+  background: var(--sdao-purple-dark);
+}
+
+/* Stat cards (scholarship types) */
+.sdao-type-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sdao-type-stat {
+  border-radius: 12px;
+  padding: 18px;
+  border: 2px solid #e5e7eb;
+  background: #fff;
+}
+
+.sdao-type-stat--validated {
+  border-color: #86efac;
+}
+
+.sdao-type-stat--validated .sdao-type-stat-value {
+  color: #16a34a;
+}
+
+.sdao-type-stat--declined {
+  border-color: #fecaca;
+}
+
+.sdao-type-stat--declined .sdao-type-stat-value {
+  color: #dc2626;
+}
+
+.sdao-type-stat--disbursed {
+  border-color: #fdba74;
+}
+
+.sdao-type-stat--disbursed .sdao-type-stat-value {
+  color: #ea580c;
+}
+
+.sdao-type-stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 6px 0;
+}
+
+.sdao-type-stat-value {
+  font-size: 26px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.sdao-type-stat-hint {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Application cards */
+.sdao-app-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+
+.sdao-app-card:last-child {
+  margin-bottom: 0;
+}
+
+.sdao-app-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sdao-app-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  margin: 0;
+}
+
+.sdao-app-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 12px 0;
+}
+
+.sdao-app-grid {
+  display: grid;
+  grid-template-columns: 1fr 80px 100px auto;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (max-width: 1100px) {
+  .sdao-kpi-row,
+  .sdao-type-stat-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .sdao-two-col,
-  .sdao-report-grid {
+  .sdao-mid-grid,
+  .sdao-metrics-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sdao-bar-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .sdao-bar-meta {
+    text-align: left;
+  }
+
+  .sdao-app-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -234,7 +407,59 @@
     min-height: auto;
   }
 
-  .sdao-layout .sdao-stats-grid {
+  .sdao-kpi-row,
+  .sdao-type-stat-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* Clearance progress */
+.sdao-clear-bar {
+  height: 8px;
+  background: #f3f4f6;
+  border-radius: 999px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.sdao-clear-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+/* Doc request tinted cards (match DO blue primary for SDAO) */
+.sdao-doc-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sdao-doc-stat {
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+}
+
+.sdao-doc-stat--total {
+  background: #fff;
+}
+
+.sdao-doc-stat--pending {
+  background: #ffedd5;
+  border-color: #fed7aa;
+}
+
+.sdao-doc-stat--uploaded {
+  background: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.sdao-doc-stat--received {
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.sdao-doc-stat .sdao-type-stat-value {
+  margin-bottom: 2px;
 }
